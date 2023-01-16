@@ -29,9 +29,9 @@
                         登入
                     </button>
 
-                    <button id="check" v-on:click="checkLogin()" type="button" class="btn btn-success">
+                    <!-- <button id="check" v-on:click="checkLogin()" type="button" class="btn btn-success">
                         登入確認
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                         document.cookie = `week2Cookie=${token}; expires=${expired};`;
                         // 1.登入成功時，defaults: 每次都會帶入 headers，透過cookie給予憑證。
                         axios.defaults.headers.common['Authorization'] = token; // 登入成功時
-                        console.log('登入成功，將跳轉至產品頁面。');
+                        //console.log('登入成功，將跳轉至產品頁面。');
                         location = "../week02/productList.html";
 
                     })
@@ -119,27 +119,27 @@
                     //         console.log(err.message);
                     //     })
                     // });
-                },
-                checkLogin(){
-                    axios.post(`${url}api/user/check`)
-                    .then((res) =>{
-                        console.log('確認已登入');
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
-                    })
-                    // checkBtn.addEventListener('click', () => {
-                    //     // defaults:  每次都會帶入 headers
-                    //     axios.post(`${url}api/user/check`)
-                    //     .then((res) => {
-                    //         console.log(res);
-                    //         console.log('確認已登入');
-                    //     })
-                    //     .catch((err) => {
-                    //         console.log(err.message);
-                    //     })
-                    // });
                 }
+                //, checkLogin(){
+                //     axios.post(`${url}api/user/check`)
+                //     .then((res) =>{
+                //         //console.log('確認已登入');
+                //     })
+                //     .catch((err) => {
+                //         console.log(err.message);
+                //     })
+                //     // checkBtn.addEventListener('click', () => {
+                //     //     // defaults:  每次都會帶入 headers
+                //     //     axios.post(`${url}api/user/check`)
+                //     //     .then((res) => {
+                //     //         console.log(res);
+                //     //         console.log('確認已登入');
+                //     //     })
+                //     //     .catch((err) => {
+                //     //         console.log(err.message);
+                //     //     })
+                //     // });
+                //}
 
             },
             //生命週期，元件開始時，執行這段

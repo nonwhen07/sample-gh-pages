@@ -80,7 +80,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="product in productList">
+                            <!-- <tr v-for="product in productList">
+                                <td width="150">{{ product.title }}</td>
+                                <td width="120"><del>{{ product.origin_price }}</del></td>
+                                <td width="120">{{ product.price }}</td>
+                                <td width="150">
+                                    
+                                    <div v-if="product.is_enabled">
+                                        <p style="color: rgb(36, 212, 95);">啟用</p>
+                                    </div>
+                                    <div v-else>
+                                        <p style="color: red;">未啟用</p>
+                                    </div>
+
+                                </td>
+                                <td width="120">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click=" selectProduct = {...product}">
+                                        查看細節
+                                    </button>
+                                </td> -->
+                            </tr>
+
+                            <tr v-for="(product, id) in productList" :key="id">
                                 <td width="150">{{ product.title }}</td>
                                 <td width="120"><del>{{ product.origin_price }}</del></td>
                                 <td width="120">{{ product.price }}</td>
@@ -101,6 +123,8 @@
                                     </button>
                                 </td>
                             </tr>
+
+
                         </tbody>
                     </table>
                     <p>目前有 <span>{{ productList.length }}</span> 項產品</p>
@@ -227,10 +251,11 @@
                     axios.post(`${url}api/user/check`)
                     .then((res) => {
                         //console.log(res);
-                        console.log('確認已登入。');
+                        //console.log('確認已登入。');
                     })
                     .catch((err) => {
                         console.log(err.message);
+                        location = "../week02/loginPage.html";
                     })
                 },
                 //登出
@@ -238,7 +263,7 @@
                     // defaults:  每次都會帶入 headers
                     axios.post(`${url}logout`)
                     .then((res) => {
-                        console.log('確認已登入，將跳轉回登入頁面。');
+                        //console.log('確認已登入，將跳轉回登入頁面。');
                         location = "../week02/loginPage.html";
                     })
                     .catch((err) => {
@@ -251,9 +276,9 @@
                     .then((res) => {
                         //清空選單
                         this.selectProduct = {};
-                        console.log('已取得線上產品');
+                        //console.log('已取得線上產品');
                         this.productList = res.data.products;
-                        console.log(res.data.products);
+                        //console.log(res.data.products);
 
                         //note.......
                         // checkBtn.addEventListener('click', () => {
@@ -276,10 +301,10 @@
                 getProductsLocation(){
                     //清空選單
                     this.selectProduct = {};
-                    console.log('已取得本地產品');
+                    //console.log('已取得本地產品');
                     this.productList = locationProductList;
 
-                    console.log(locationProductList);
+                    //console.log(locationProductList);
 
                     //note.......
                     // getProductsBtn.addEventListener('click',()=>{
