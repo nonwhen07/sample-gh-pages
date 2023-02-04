@@ -24,7 +24,7 @@ export const locationProductList = [
       content: "尺寸：6寸",
       description: "蜜蜂蜜蛋糕，夾層夾上酸酸甜甜的檸檬餡，清爽可口的滋味讓人口水直流！",
       id: "-McJ-VvcwfN1_Ye_NtVA",
-      is_enabled: 16,
+      is_enabled: 0,
       origin_price: 1000,
       price: 900,
       title: "蜂蜜檸檬蛋糕",
