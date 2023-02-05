@@ -96,7 +96,7 @@
         </div>
 
         
-        
+          
         <!-- productModal -->
         <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
@@ -244,8 +244,8 @@
         let productModal = null;
         let deleteModal = null;
             
-        //取得名為 "week2Cookie" 的cookie，如果有就存入憑證。
-        const token = document.cookie.replace(/(?:(?:^|.*;\s*)week2Cookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        //取得名為 "tokenCookie" 的cookie，如果有就存入憑證。
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)tokenCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         // 2.cookie儲存時，defaults: 每次都會帶入 headers，透過cookie給予憑證。
         axios.defaults.headers.common['Authorization'] = token; // cookie儲存時
 
@@ -277,7 +277,7 @@
                     .catch((err) => {
                         //console.log(err.message);
                         alert(err.response.data.message);
-                        location = "../week03/loginPage.html";
+                        location = "../week04/loginPage.html";
                     })
                 },
                 //登出
@@ -286,7 +286,7 @@
                     axios.post(`${this.apiUrl}logout`)
                     .then((res) => {
                         alert('將跳轉回登入頁面...');
-                        location = "../week03/loginPage.html";
+                        location = "../week04/loginPage.html";
                     })
                     .catch((err) => {
                         console.log(err.response.data.message);
@@ -379,7 +379,8 @@
             mounted() {
                 productModal = new bootstrap.Modal(document.querySelector('#productModal'));
                 deleteModal = new bootstrap.Modal(document.querySelector('#deleteModal'));
-                this.checkLogin();
+                //this.checkLogin();
+                this.getProductsAll();
             }
             
         }
