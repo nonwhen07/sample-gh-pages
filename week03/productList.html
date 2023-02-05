@@ -7,7 +7,7 @@
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <style>
-        img {
+        .img {
             object-fit: contain;
             max-width: 100%;
         }
@@ -26,119 +26,27 @@
         <div class="container">
             <div class="row py-3">
                 <div class="col-md-12">
-                    <button id="check" v-on:click="checkLogin()" type="button" class="btn btn-success">
+                    <button id="check" v-on:click="checkLogin()" type="button" class="btn btn-outline-success">
                         登入確認
                     </button>
-                    <button id="logout" v-on:click="logout()" type="button" class="btn btn-danger">
+                    <button id="logout" v-on:click="logout()" type="button" class="btn btn-outline-danger">
                         登出帳號
                     </button>
-                    <!-- <button id="getProducts" v-on:click="getProductsAll()" type="button" class="btn btn-primary">
-                        取得線上產品
-                    </button> -->
                 </div>
-                <!-- <div class="col-md-6">
-                    <button id="getProducts" v-on:click="getProductsAll()" type="button" class="btn btn-primary">
-                        取得線上產品
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <button id="getProducts" v-on:click="getProductsLocation()" type="button" class="btn btn-primary">
-                        取得本地產品
-                    </button>
-                </div> -->
                 
-                <!-- <div class="col-md-6">
-                    <h2>產品列表</h2>
-                    <table class="table table-hover mt-4">
-                        <thead>
-                            <tr>
-                                <th width="150">產品名稱</th>
-                                <th width="120">原價</th>
-                                <th width="120">售價</th>
-                                <th width="150">是否啟用</th>
-                                <th width="120">查看細節</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(product, id) in productList" :key="id">
-                                <td width="150">{{ product.title }}</td>
-                                <td width="120"><del>{{ product.origin_price }}</del></td>
-                                <td width="120">{{ product.price }}</td>
-                                <td width="150">
-                                    
-                                    <div v-if="product.is_enabled">
-                                        <p style="color: rgb(36, 212, 95);">啟用</p>
-                                    </div>
-                                    <div v-else>
-                                        <p style="color: red;">未啟用</p>
-                                    </div>
-
-                                </td>
-                                <td width="120">
-                                    <button type="button" class="btn btn-primary"
-                                        v-on:click=" selectProduct = {...product}">
-                                        查看細節
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>目前有 <span>{{ productList.length }}</span> 項產品</p>
-                </div> -->
-                <!-- <div class="col-md-6">
-                    <h2>單一產品細節</h2>
-                        <div class="row card mb-3" v-if="selectProduct.title">
-                            <img v-bind:src="selectProduct.imageUrl" class="card-img-top primary-image" v-bind:alt="selectProduct.title"
-                                v-bind:title="`${selectProduct.title} : ${ selectProduct.description}`" />
-                        
-                            <div class="card-body">
-                                <div>
-                                    <h5 class="card-title">{{selectProduct.title}}</h2>
-                                    <button type="button" class="btn btn-primary">
-                                        {{selectProduct.category}}
-                                    </button>
-                                </div>
-                                <div>
-                                    <p class="card-text">商品描述：{{ selectProduct.description }}</p>
-                                </div>
-                                <div>
-                                    <p class="card-text">商品內容：{{ selectProduct.content }}</p>
-                                </div>
-                                <div class="d-flex">
-                                    <p class="card-text text-secondary">
-                                        <del>{{ selectProduct.origin_price }}</del> 
-                                    </p>
-                                    {{ selectProduct.price + selectProduct.unit }}/ 元
-                                </div>
-        
-                                <button type="button" class="btn btn-danger"
-                                    v-on:click=" selectProduct = {}">
-                                    取消選取
-                                </button>
-                            </div>
-                            <template v-for="image in selectProduct.imagesUrl" :key="image">
-                                <img :src="image" v-bind:alt="selectProduct.title" class="card-img-top primary-image"
-                                    v-bind:title= "`${selectProduct.title} : ${selectProduct.description}`" />
-                            </template>
-                        </div>
-                        <div v-else>
-                            <p class="text-secondary">請選擇一個商品查看</p>
-                        </div>
-                </div> -->
-
+                
+                
+                
+                
                 <hr/>
                 
                 <div class="col-md-12">
                     <h2>產品列表</h2>
-
                     <div style="text-align: right;">
-                        <button type="button" @click="selectProduct = {}, openModal('new')" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#productModal">
+                        <button type="button" @click="openModal('new')" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#productModal">
                             建立新產品
                         </button>
                     </div>
-                    
-                    
-
                     <table class="table table-hover mt-4" style="text-align: center;">
                         <thead>
                             <tr>
@@ -167,14 +75,16 @@
 
                                 </td>
                                 <td width="120">
-                                    <button type="button" class="btn btn btn-outline-primary"
-                                        @click="selectProduct = {...product}, openModal('edit', product)">
-                                        編輯
-                                    </button>
-                                    <button type="button" class="btn btn btn-outline-danger"
-                                        v-on:click=" selectProduct = {...product}, openDeleteModal()">
-                                        刪除
-                                    </button>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn btn-outline-primary"
+                                            @click="selectProduct = {...product}, openModal('edit', product)">
+                                            編輯
+                                        </button>
+                                        <button type="button" class="btn btn btn-outline-danger"
+                                            v-on:click=" selectProduct = {...product}, openDeleteModal(product)">
+                                            刪除
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -202,9 +112,10 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <label for="imageUrl" class="form-label">主要圖片網址</label>
+                            <label for="imageUrl" class="form-label">主要圖片</label>
                             <input v-model="selectProduct.imageUrl" type="text" class="form-control mb-2" placeholder="請輸入圖片連結">
-                            <img v-bind:src="selectProduct.imageUrl" class="card-img-top primary-image" v-bind:alt="selectProduct.title"
+                            <img v-if="isNew" class="img-fluid" :src="selectProduct.imageUrl">
+                            <img v-else v-bind:src="selectProduct.imageUrl" class="img-fluid" v-bind:alt="selectProduct.title"
                                 v-bind:title="`${selectProduct.title} : ${ selectProduct.description}`" />
                             
                             
@@ -218,7 +129,7 @@
                                     v-bind:title= "`${selectProduct.title} : ${selectProduct.description}`" />
                             </template> -->
 
-                            <!-- 下面這段圖片上船部分copy助教 -->
+                            <!-- 下面這段圖片網址部分copy助教 -->
                             <div v-if="Array.isArray(selectProduct.imagesUrl)">
                                 <div class="mb-1" v-for="(image, key) in selectProduct.imagesUrl" :key="key">
                                     <div class="mb-3">
@@ -229,12 +140,12 @@
                                     <img class="img-fluid" :src="image">
                                 </div>
                                 <div v-if="!selectProduct.imagesUrl.length || selectProduct.imagesUrl[selectProduct.imagesUrl.length - 1]">
-                                    <button type="button" class="btn btn btn-outline-success col-md-12 ms-auto">
+                                    <button type="button" class="btn btn btn-outline-success col-md-12 ms-auto" @click="selectProduct.imagesUrl.push('')">
                                         新增圖片
                                     </button>
                                 </div>
                                 <div v-else>
-                                    <button type="button" class="btn btn btn-outline-danger col-md-12 ms-auto">
+                                    <button type="button" class="btn btn btn-outline-danger col-md-12 ms-auto" @click="selectProduct.imagesUrl.pop()">
                                         刪除圖片
                                     </button>
                                 </div>
@@ -244,6 +155,7 @@
                                     新增圖片
                                 </button>
                             </div>
+                            <!-- 上方這段圖片網址部分copy助教 -->
                             
                         </div>
 
@@ -251,23 +163,23 @@
                             <div class="row">
                                 <label for="selectTitle" class="">標題</label>
                                 <div class="col-md-12">
-                                    <input id="selectTitle" type="text" class="form-control" v-bind:value="selectProduct.title" placeholder="請輸入標題" v-model="selectProduct.title" />
+                                    <input id="selectTitle" type="text" class="form-control" placeholder="請輸入標題" v-model="selectProduct.title" />
                                 </div>
                                 <label for="selectCategory" class="col-md-6 ms-auto">分類</label>
                                 <label for="selectUnit" class="col-md-6 ms-auto">單位</label>
                                 <div class="col-md-6">
-                                    <input id="selectCategory" type="text" class="form-control" v-bind:value="selectProduct.category" placeholder="請輸入分類" v-model="selectProduct.category" />
+                                    <input id="selectCategory" type="text" class="form-control" placeholder="請輸入分類" v-model="selectProduct.category" />
                                 </div>
                                 <div class="col-md-6">
-                                    <input id="selectUnit" type="text" class="form-control" v-bind:value="selectProduct.unit" placeholder="請輸入單位" v-model="selectProduct.unit" />
+                                    <input id="selectUnit" type="text" class="form-control" placeholder="請輸入單位" v-model="selectProduct.unit" />
                                 </div>
                                 <label for="selectOriginprice" class="col-md-6 ms-auto">原價</label>
                                 <label for="selectPrice" class="col-md-6 ms-auto">售價</label>
                                 <div class="col-md-6">
-                                    <input id="selectOriginprice" type="number" min="0" class="form-control" v-bind:value="selectProduct.origin_price" placeholder="請輸入原價" v-model="selectProduct.origin_price" />
+                                    <input id="selectOriginprice" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model="selectProduct.origin_price" />
                                 </div>
                                 <div class="col-md-6">
-                                    <input id="selectPrice" type="number" min="0" class="form-control" v-bind:value="selectProduct.price" placeholder="請輸入售價" v-model="selectProduct.price" />
+                                    <input id="selectPrice" type="number" min="0" class="form-control" placeholder="請輸入售價" v-model="selectProduct.price" />
                                 </div>
                                 <label for="selectDescription" class="col-md-12">商品描述</label>
                                 <div class="col-md-12">
@@ -287,8 +199,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" @click="updateProduct">確認</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
             </div>
@@ -306,8 +218,8 @@
                         確認要刪除 <strong class="text-danger">{{ selectProduct.title }}</strong> 商品嗎?(刪除後將無法恢復)。
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" @click="deleteProduct()">確認刪除</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-danger">確認刪除</button>
                     </div>
                 </div>
             </div>
@@ -317,7 +229,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="https://unpkg.com/vue@next"></script> -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="module">
         
@@ -329,15 +240,9 @@
         //import { locationProductList } from'../week01/prod.js';
         //產品列表
         //const productList = [] ;
-
-        const checkBtn = document.querySelector('#check');
-        // const getProductsBtn = document.querySelector('#getProducts');
-
-        //建立bootstrap的modal實體
-        //const productModal = document.querySelector('#productModal');
-        //const productModal = new bootstrap.Modal(productModal);
-        let productModal = '';
-        let deleteModal = '';
+        
+        let productModal = null;
+        let deleteModal = null;
             
         //取得名為 "week2Cookie" 的cookie，如果有就存入憑證。
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)week2Cookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -351,8 +256,10 @@
                     apiUrl : 'https://vue3-course-api.hexschool.io/v2/',
                     //2. 使用管理者API路徑
                     apiPath : 'jeff_hexschool',
+
                     //new Item/edit check
                     isNew: false,
+                    
                     productList : [],
                     selectProduct: {
                         imagesUrl: [],
@@ -387,7 +294,6 @@
                     })
                 },
 
-                
                 //線上取得清單
                 getProductsAll(){
                     axios.get(`${this.apiUrl}api/${this.apiPath}/admin/products/all`)
@@ -424,13 +330,28 @@
                             console.log(err.response.data.message);
                         })
                 },
+                //刪除商品
+                deleteProduct(){
+                    let url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.selectProduct.id}`;
+                    let http = 'delete'
+                    axios[http](url, { data: this.selectProduct })
+                        .then((res) => {
+                            //更新後關閉modal重讀清單
+                            alert(res.data.message);
+                            deleteModal.hide();
+                            this.getProductsAll();
+                        })
+                        .catch((err)=>{
+                            console.log(err.response.data.message);
+                        })
+
+                },
                 //新增圖片
                 insertImages() {
                     this.selectProduct.imagesUrl = [];
                     this.selectProduct.imagesUrl.push('');
                 },
-
-
+               
                 //Bootstrap Modal 打開產品表單
                 openModal(isNew, item){
                     if (isNew === 'new') {
@@ -440,16 +361,15 @@
                         this.isNew = true;
                         productModal.show();
                     }
-                    else{
+                    else {
                         this.selectProduct = { ...item };
                         this.isNew = false;
                         productModal.show();
-                        //console.log(item.id);
                     }
-
                 },
                 //Bootstrap Modal 打開刪除表單
-                openDeleteModal(){
+                openDeleteModal(item){
+                    this.selectProduct = { ...item };
                     deleteModal.show();
                 }
 
@@ -460,7 +380,6 @@
                 productModal = new bootstrap.Modal(document.querySelector('#productModal'));
                 deleteModal = new bootstrap.Modal(document.querySelector('#deleteModal'));
                 this.checkLogin();
-                //this.getProductsAll();
             }
             
         }
