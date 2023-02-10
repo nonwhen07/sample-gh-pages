@@ -46,33 +46,7 @@ const app = {
                 console.log(`${err.message}，登入失敗請確認帳號、密碼是否正確。`);
             })
 
-            //note..........
-            // loginBtn.addEventListener('click', () => {
-            //     const username = emailInput.value; // email
-            //     const password = pwInput.value;
-            //     const user = {
-            //         username,
-            //         password
-            //     }
-            //     // console.log(user);
-            //     axios.post(`${url}admin/signin`, user)
-            //     .then((res) => {
-            //         //console.log(res);
-            //         const {token, expired} = res.data;
-            //         //console.log(token, expired);
-            //         //EX document.cookie用法
-            //         // document.cookie = "someCookieName=true; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
-            //         // "someCookieName":為自訂名稱，可替換任意名詞。 "expires":到期日。
-            //         //登入成功時，存入cookie
-            //         document.cookie = `tokenCookie=${token}; expires=${expired};`;
-            //         // 1.登入成功時，defaults: 每次都會帶入 headers，透過cookie給予憑證。
-            //         axios.defaults.headers.common['Authorization'] = token; // 登入成功時
-            //         console.log('登入成功');
-            //     })
-            //     .catch((err) => {
-            //         console.log(err.message);
-            //     })
-            // });
+            
         }
 
     },

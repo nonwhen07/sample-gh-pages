@@ -34,9 +34,15 @@
                     </button>
                 </div>
                 
-                
-                
-                
+                <!-- <hr/>
+                    <div class="col-md-12">
+                    上傳圖片網址
+                    <input id="file" class="form-control" type="file" />
+                    <button id="insertImageUrl" v-on:click="" type="button" class="btn btn-outline-success">
+                        圖片送出
+                    </button>
+                    <label id="showResult"></label>
+                </div> -->
                 
                 <hr/>
                 
@@ -47,6 +53,8 @@
                             建立新產品
                         </button>
                     </div>
+
+                    <!-- productTable -->
                     <table class="table table-hover mt-4" style="text-align: center;">
                         <thead>
                             <tr>
@@ -89,7 +97,32 @@
                             </tr>
                         </tbody>
                     </table>
-                    <p>目前有 <span>{{ productList.length }}</span> 項產品</p>
+
+
+                    <!-- 分頁元件 -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item" :class="{'disabled':pages.current_page === 1}" >
+                                <a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductsAll(1)">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" :class="{'active':page === pages.current_page}" 
+                                v-for="page in pages.total_pages" :key="page + 'page'">
+                                <a class="page-link" href="#" @click.prevent="getProductsAll(page)">
+                                    {{ page }}
+                                </a>
+                            </li>
+                            <li class="page-item" :class="{'disabled':pages.current_page === pages.total_pages}">
+                                <a class="page-link" href="#" aria-label="Next" @click.prevent="getProductsAll(pages.total_pages)" >
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- 分頁元件 -->
+                    
+                    <!-- <p>目前有 <span>{{ productList.length }}</span> 項產品</p> -->
                     
                 </div>
             </div>
@@ -230,19 +263,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    
     <script type="module">
         
-        // VueCDN
+        // VueCDN 
 	    import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js';
         //const { createApp } = Vue;
-
-        //引用作業的菜單
-        //import { locationProductList } from'../week01/prod.js';
-        //產品列表
-        //const productList = [] ;
         
         let productModal = null;
         let deleteModal = null;
+        //let showResult = null;
             
         //取得名為 "tokenCookie" 的cookie，如果有就存入憑證。
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)tokenCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -252,14 +283,11 @@
         const app = {
             data(){
                 return {
-                    //1. 登入，確認是否登入
+                    //1. 使用管理者API路徑
                     apiUrl : 'https://vue3-course-api.hexschool.io/v2/',
-                    //2. 使用管理者API路徑
                     apiPath : 'jeff_hexschool',
-
-                    //new Item/edit check
-                    isNew: false,
-                    
+                    isNew: false, //new Item/edit check
+                    pages: {}, //紀錄頁數
                     productList : [],
                     selectProduct: {
                         imagesUrl: [],
@@ -290,22 +318,21 @@
                     })
                     .catch((err) => {
                         console.log(err.response.data.message);
-                        //alert(err.response.data.message);
                     })
                 },
-
-                //線上取得清單
-                getProductsAll(){
-                    axios.get(`${this.apiUrl}api/${this.apiPath}/admin/products/all`)
+                
+                //線上取得清單(新增頁數判斷)
+                getProductsAll( page = 1 ){ //預設頁碼參數
+                    axios.get(`${this.apiUrl}api/${this.apiPath}/admin/products?page=${page}`)
                     .then((res) => {
-                        //清空選單
-                        this.selectProduct = { imagesUrl: [], };
-                        //console.log('已取得線上產品');
                         this.productList = res.data.products;
+                        this.pages = res.data.pagination; //頁碼資訊
+
+                        //console.log(res.data.pagination);
+                        //this.selectProduct = { imagesUrl: [], };//selectProduct清空
                     })
                     .catch((err)=>{
                         console.log(err.response.data.message);
-                        //alert(err.response.data.message);
                     })
                 },
                 //更新產品內容
@@ -336,7 +363,6 @@
                     let http = 'delete'
                     axios[http](url, { data: this.selectProduct })
                         .then((res) => {
-                            //更新後關閉modal重讀清單
                             alert(res.data.message);
                             deleteModal.hide();
                             this.getProductsAll();
@@ -346,12 +372,30 @@
                         })
 
                 },
+
+                // //上傳圖片網址
+                // insertImageUrl(){
+                //     let url = `${this.apiUrl}/api/${this.apiPath}/admin/upload`;
+                //     let http = 'post';
+                //     axios[http](url, { data: this.selectProduct })
+                //         .then((res) => {
+                //             //更新後關閉modal重讀清單
+                //             alert(res.data.message);
+                //             showResult.hide();
+                //             showResult.value(err.response.data.message);
+                //         })
+                //         .catch((err)=>{
+                //             //console.log(err.response.data.message);
+                //             showResult.show();
+                //             showResult.value(err.response.data.message);
+                //         })
+                // },
+
                 //新增圖片
                 insertImages() {
                     this.selectProduct.imagesUrl = [];
                     this.selectProduct.imagesUrl.push('');
                 },
-               
                 //Bootstrap Modal 打開產品表單
                 openModal(isNew, item){
                     if (isNew === 'new') {
@@ -372,6 +416,7 @@
                     this.selectProduct = { ...item };
                     deleteModal.show();
                 }
+                
 
 
             },
@@ -379,20 +424,19 @@
             mounted() {
                 productModal = new bootstrap.Modal(document.querySelector('#productModal'));
                 deleteModal = new bootstrap.Modal(document.querySelector('#deleteModal'));
+                //showResult = new bootstrap.Modal(document.querySelector('#showResult'));
                 //this.checkLogin();
                 this.getProductsAll();
             }
-            
         }
 
-        // 1. 建立元件
-        // 2. 生成Vue應用程式
-        // 3. 渲染至畫面上
-        createApp(app)  //生成
-            .mount('#mainApp');  //渲染
+        createApp(app).mount('#mainApp');  //渲染
 
             
             
     </script>
+
+
+    <!-- <script src="./products.js" type="module" /> -->
 </body>
 </html>
