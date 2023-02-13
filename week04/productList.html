@@ -26,26 +26,34 @@
         <div class="container">
             <div class="row py-3">
                 <div class="col-md-12">
+                    <h2>狀態確認</h2>
                     <button id="check" v-on:click="checkLogin()" type="button" class="btn btn-outline-success">
                         登入確認
                     </button>
                     <button id="logout" v-on:click="logout()" type="button" class="btn btn-outline-danger">
                         登出帳號
                     </button>
+                    <hr/>
+                </div>
+                <!-- uploadImage -->
+                <div class="col-md-12">
+                    <h2>上傳圖片網址</h2>
+                    <form enctype="multipart/form-data" method="post">
+                        <input id="fileInput" type="file" @change="uploadImage()" name="file-to-upload" class="form-control" />
+                        <!-- <button id="uploadImage" v-on:click="uploadImage()" type="submit" class="btn btn-outline-success"
+                            v-on:click="">
+                            圖片送出
+                        </button> -->
+                        <p style="display: block; overflow: auto;"> {{ showMessage }} </p>
+                    </form>
+
+                    <hr/>
                 </div>
                 
-                <!-- <hr/>
-                    <div class="col-md-12">
-                    上傳圖片網址
-                    <input id="file" class="form-control" type="file" />
-                    <button id="insertImageUrl" v-on:click="" type="button" class="btn btn-outline-success">
-                        圖片送出
-                    </button>
-                    <label id="showResult"></label>
-                </div> -->
                 
-                <hr/>
                 
+
+                <!-- product -->
                 <div class="col-md-12">
                     <h2>產品列表</h2>
                     <div style="text-align: right;">
@@ -100,29 +108,29 @@
 
 
                     <!-- 分頁元件 -->
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item" :class="{'disabled':pages.current_page === 1}" >
-                                <a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductsAll(1)">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item" :class="{'active':page === pages.current_page}" 
-                                v-for="page in pages.total_pages" :key="page + 'page'">
-                                <a class="page-link" href="#" @click.prevent="getProductsAll(page)">
-                                    {{ page }}
-                                </a>
-                            </li>
-                            <li class="page-item" :class="{'disabled':pages.current_page === pages.total_pages}">
-                                <a class="page-link" href="#" aria-label="Next" @click.prevent="getProductsAll(pages.total_pages)" >
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- 分頁元件 -->
-                    
-                    <!-- <p>目前有 <span>{{ productList.length }}</span> 項產品</p> -->
+                    <div class="pagination text-center">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item" :class="{'disabled':pages.current_page === 1}" >
+                                    <a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductsAll(1)">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item" :class="{'active':page === pages.current_page}" 
+                                    v-for="page in pages.total_pages" :key="page + 'page'">
+                                    <a class="page-link" href="#" @click.prevent="getProductsAll(page)">
+                                        {{ page }}
+                                    </a>
+                                </li>
+                                <li class="page-item" :class="{'disabled':pages.current_page === pages.total_pages}">
+                                    <a class="page-link" href="#" aria-label="Next" @click.prevent="getProductsAll(pages.total_pages)" >
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <!-- <p>目前有 <span>{{ productList.length }}</span> 項產品</p> -->
+                    </div>
                     
                 </div>
             </div>
@@ -273,7 +281,9 @@
         
         let productModal = null;
         let deleteModal = null;
-        //let showResult = null;
+        let fileInput = null;
+        let showMessage = '';
+        
             
         //取得名為 "tokenCookie" 的cookie，如果有就存入憑證。
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)tokenCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -284,41 +294,42 @@
             data(){
                 return {
                     //1. 使用管理者API路徑
-                    apiUrl : 'https://vue3-course-api.hexschool.io/v2/',
-                    apiPath : 'jeff_hexschool',
+                    apiUrl: 'https://vue3-course-api.hexschool.io/v2/',
+                    apiPath: 'jeff_hexschool',
                     isNew: false, //new Item/edit check
                     pages: {}, //紀錄頁數
-                    productList : [],
+                    productList: [],
                     selectProduct: {
                         imagesUrl: [],
                     }
+
+                    , showMessage:'' //圖片上傳訊息顯示
                 }
             },
             methods: {
                 //登入確認後載入表單
                 checkLogin(){
-                    // defaults:  每次都會帶入 headers
                     axios.post(`${this.apiUrl}api/user/check`)
-                    .then((res) => {
-                        this.getProductsAll();
-                    })
-                    .catch((err) => {
-                        //console.log(err.message);
-                        alert(err.response.data.message);
-                        location = "../week04/loginPage.html";
-                    })
+                        .then((res) => {
+                            //alert('確認登入');
+                            this.getProductsAll();
+                        })
+                        .catch((err) => {
+                            alert(err.response.data.message);
+                            location = "../week04/loginPage.html";
+                        })
                 },
                 //登出
                 logout(){
                     // defaults:  每次都會帶入 headers
                     axios.post(`${this.apiUrl}logout`)
-                    .then((res) => {
-                        alert('將跳轉回登入頁面...');
-                        location = "../week04/loginPage.html";
-                    })
-                    .catch((err) => {
-                        console.log(err.response.data.message);
-                    })
+                        .then((res) => {
+                            alert('將跳轉回登入頁面...');
+                            location = "../week04/loginPage.html";
+                        })
+                        .catch((err) => {
+                            console.log(err.response.data.message);
+                        })
                 },
                 
                 //線上取得清單(新增頁數判斷)
@@ -373,25 +384,33 @@
 
                 },
 
-                // //上傳圖片網址
-                // insertImageUrl(){
-                //     let url = `${this.apiUrl}/api/${this.apiPath}/admin/upload`;
-                //     let http = 'post';
-                //     axios[http](url, { data: this.selectProduct })
-                //         .then((res) => {
-                //             //更新後關閉modal重讀清單
-                //             alert(res.data.message);
-                //             showResult.hide();
-                //             showResult.value(err.response.data.message);
-                //         })
-                //         .catch((err)=>{
-                //             //console.log(err.response.data.message);
-                //             showResult.show();
-                //             showResult.value(err.response.data.message);
-                //         })
+                // //上傳圖片確認(檔案格式、大小)
+                // imageCheck(){
+                //     //console.dir(fileInput);
+                //     const file = fileInput._element.files[0];
+                //     const formData = new FormData();
+                //     formData.append('file-to-upload',file);
+                //     this.showMessage = fileInput._element.files[0].name;
                 // },
+                //上傳圖片網址
+                uploadImage(){
+                    const file = fileInput._element.files[0];
+                    const formData = new FormData();
+                    formData.append('file-to-upload',file);
+                    axios.post(`${this.apiUrl}/api/${this.apiPath}/admin/upload`, formData)
+                        .then((res) => {
+                            console.log(res.data.imageUrl);
+                            this.showMessage = res.data.imageUrl;
+                        })
+                        .catch((err) => {
+                            // console.log(err.data.message);
+                            // this.showMessage = err.data.message;
+                            this.showMessage = err.response;
+                        })
 
-                //新增圖片
+                },
+
+                //新增圖片Url路徑
                 insertImages() {
                     this.selectProduct.imagesUrl = [];
                     this.selectProduct.imagesUrl.push('');
@@ -424,9 +443,9 @@
             mounted() {
                 productModal = new bootstrap.Modal(document.querySelector('#productModal'));
                 deleteModal = new bootstrap.Modal(document.querySelector('#deleteModal'));
-                //showResult = new bootstrap.Modal(document.querySelector('#showResult'));
-                //this.checkLogin();
-                this.getProductsAll();
+                fileInput = new bootstrap.Modal(document.querySelector('#fileInput'));
+                this.checkLogin();
+                //this.getProductsAll();
             }
         }
 
