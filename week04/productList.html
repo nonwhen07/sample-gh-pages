@@ -41,16 +41,13 @@
                     <h2>上傳圖片網址</h2>
                     <form enctype="multipart/form-data" method="post">
                         <input id="fileInput" type="file" @change="uploadImage()" name="file-to-upload" class="form-control" />
-                        <!-- <button id="uploadImage" v-on:click="uploadImage()" type="submit" class="btn btn-outline-success"
-                            v-on:click="">
-                            圖片送出
-                        </button> -->
                         <p style="display: block; overflow: auto;"> {{ showMessage }} </p>
                     </form>
-
+                    <!-- 上傳圖片元件(轉換失敗，想問助教是否有可以參考的例子) -->
+                    <!-- <file-upload></file-upload> -->
+                    
                     <hr/>
                 </div>
-
                 <!-- productPath -->
                 <div class="col-md-12">
                     <h2>產品列表</h2>
@@ -59,7 +56,6 @@
                             建立新產品
                         </button>
                     </div>
-
                     <!-- productTable -->
                     <table class="table table-hover mt-4" style="text-align: center;">
                         <thead>
@@ -103,154 +99,34 @@
                             </tr>
                         </tbody>
                     </table>
-
                     <!-- 分頁元件 -->
-                    <pagination-pages :pages="pages" @emit-pages="getProductsAll"></pagination-pages>
+                    <pagination-pages :pages="pages" @emit-pages="getProductPages"></pagination-pages>
                     <!-- 分頁元件 -->
                 </div>
             </div>
         </div>
-
-        
-          
+        <!-- Modal元件 -->
         <!-- productModal -->
-        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white" style="background-color: black;">
-                    <h5 class="modal-title" id="productModalLabel">
-                        <span v-if="isNew">新增產品</span>
-                        <span v-else>編輯產品</span>
-                        {{selectProduct.title}}
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="imageUrl" class="form-label">主要圖片</label>
-                            <input v-model="selectProduct.imageUrl" type="text" class="form-control mb-2" placeholder="請輸入圖片連結">
-                            <img v-if="isNew" class="img-fluid" :src="selectProduct.imageUrl">
-                            <img v-else v-bind:src="selectProduct.imageUrl" class="img-fluid" v-bind:alt="selectProduct.title"
-                                v-bind:title="`${selectProduct.title} : ${ selectProduct.description}`" />
-                            
-                            
-                            
-                            <label class="form-label">多圖新增</label>
-                            <!-- <template v-for="image in selectProduct.imagesUrl" :key="image">
-                                <div class="col-md-12">
-                                    <input type="text" class="form-control" v-bind:value="image" />
-                                </div>
-                                <img :src="image" v-bind:alt="selectProduct.title" class="card-img-top primary-image"
-                                    v-bind:title= "`${selectProduct.title} : ${selectProduct.description}`" />
-                            </template> -->
-
-                            <!-- 下面這段圖片網址部分copy助教 -->
-                            <div v-if="Array.isArray(selectProduct.imagesUrl)">
-                                <div class="mb-1" v-for="(image, key) in selectProduct.imagesUrl" :key="key">
-                                    <div class="mb-3">
-                                      <label for="imageUrl" class="form-label">圖片網址</label>
-                                      <input v-model="selectProduct.imagesUrl[key]" type="text" class="form-control"
-                                        placeholder="請輸入圖片連結">
-                                    </div>
-                                    <img class="img-fluid" :src="image">
-                                </div>
-                                <div v-if="!selectProduct.imagesUrl.length || selectProduct.imagesUrl[selectProduct.imagesUrl.length - 1]">
-                                    <button type="button" class="btn btn btn-outline-success col-md-12 ms-auto" @click="selectProduct.imagesUrl.push('')">
-                                        新增圖片
-                                    </button>
-                                </div>
-                                <div v-else>
-                                    <button type="button" class="btn btn btn-outline-danger col-md-12 ms-auto" @click="selectProduct.imagesUrl.pop()">
-                                        刪除圖片
-                                    </button>
-                                </div>
-                            </div>
-                            <div v-else>
-                                <button type="button" class="btn btn btn-outline-success col-md-12 ms-auto" @click="insertImages">
-                                    新增圖片
-                                </button>
-                            </div>
-                            <!-- 上方這段圖片網址部分copy助教 -->
-                            
-                        </div>
-
-                        <div class="col-md-9">
-                            <div class="row">
-                                <label for="selectTitle" class="">標題</label>
-                                <div class="col-md-12">
-                                    <input id="selectTitle" type="text" class="form-control" placeholder="請輸入標題" v-model="selectProduct.title" />
-                                </div>
-                                <label for="selectCategory" class="col-md-6 ms-auto">分類</label>
-                                <label for="selectUnit" class="col-md-6 ms-auto">單位</label>
-                                <div class="col-md-6">
-                                    <input id="selectCategory" type="text" class="form-control" placeholder="請輸入分類" v-model="selectProduct.category" />
-                                </div>
-                                <div class="col-md-6">
-                                    <input id="selectUnit" type="text" class="form-control" placeholder="請輸入單位" v-model="selectProduct.unit" />
-                                </div>
-                                <label for="selectOriginprice" class="col-md-6 ms-auto">原價</label>
-                                <label for="selectPrice" class="col-md-6 ms-auto">售價</label>
-                                <div class="col-md-6">
-                                    <input id="selectOriginprice" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model="selectProduct.origin_price" />
-                                </div>
-                                <div class="col-md-6">
-                                    <input id="selectPrice" type="number" min="0" class="form-control" placeholder="請輸入售價" v-model="selectProduct.price" />
-                                </div>
-                                <label for="selectDescription" class="col-md-12">商品描述</label>
-                                <div class="col-md-12">
-                                    <textarea id="selectDescription" class="form-control" placeholder="請輸入商品描述" v-model="selectProduct.description"></textarea>
-                                </div>
-                                <label for="selectContent" class="col-md-12">說明內容</label>
-                                <div class="col-md-12">
-                                    <textarea id="selectContent" class="form-control" placeholder="請輸入說明內容" v-model="selectProduct.content"></textarea>
-                                </div>
-                                <div class="col-md-12">
-                                    <input id="selectEnabled" type="checkbox"  :value="selectProduct.is_enabled" :checked="selectProduct.is_enabled" v-model="selectProduct.is_enabled" />
-                                    <label for="selectEnabled">是否啟用</label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="updateProduct">確認</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                </div>
-            </div>
-            </div>
-        </div>
-
+        <product-modal ref="selectitem" :selectitem="selectProduct" :is-new="isNew" @update="getProductPages"></product-modal>
         <!-- deleteModal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title" id="deleteModalLabel">刪除商品</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        確認要刪除 <strong class="text-danger">{{ selectProduct.title }}</strong> 商品嗎?(刪除後將無法恢復)。
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" @click="deleteProduct()">確認刪除</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <delete-modal ref="selectitem" :selectitem="selectProduct" @update="getProductPages"></delete-modal>
+        <!-- Modal -->
 
     </div>
-
+    <!-- 上傳圖片元件(轉換失敗，想問助教是否有可以參考的例子) -->
+    <!-- <script type="text/x-template" id="fileUpload">
+        <form id="fileUpload" enctype="multipart/form-data" method="post">
+            <input id="fileInput" type="file" @change="uploadImage()" name="file-to-upload" class="form-control" />
+            <p style="display: block; overflow: auto;"> {{ message }} </p>
+        </form>
+    </script> -->
 
     <!-- 分頁元件 -->
     <script type="text/x-template" id="pagination">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
                 <li class="page-item" :class="{'disabled':pages.current_page === 1}" >
-                    <!-- <a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductsAll(1)">
+                    <!-- <a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductPages(1)">
                         <span aria-hidden="true">&laquo;</span>
                     </a> -->
                     <a class="page-link" href="#" aria-label="Previous" @click.prevent="emitPages(pages.current_page - 1)">
@@ -259,7 +135,7 @@
                 </li>
                 <li class="page-item" :class="{'active':page === pages.current_page}" 
                     v-for="page in pages.total_pages" :key="page + 'page'">
-                    <!-- <a class="page-link" href="#" @click.prevent="getProductsAll(page)">
+                    <!-- <a class="page-link" href="#" @click.prevent="getProductPages(page)">
                         {{ page }}
                     </a> -->
 
@@ -268,7 +144,7 @@
                     </a>
                 </li>
                 <li class="page-item" :class="{'disabled':pages.current_page === pages.total_pages}">
-                    <!-- <a class="page-link" href="#" aria-label="Next" @click.prevent="getProductsAll(pages.total_pages)" >
+                    <!-- <a class="page-link" href="#" aria-label="Next" @click.prevent="getProductPages(pages.total_pages)" >
                         <span aria-hidden="true">&raquo;</span>
                     </a> -->
                     <a class="page-link" href="#" aria-label="Next" @click.prevent="emitPages(pages.current_page + 1)" >
@@ -279,6 +155,121 @@
         </nav>
     </script>
 
+    <!-- 開啟productModal -->
+    <script type="text/x-template" id="productModal">
+        <div id="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white" style="background-color: black;">
+                    <h5 class="modal-title" id="productModalLabel">
+                        <span v-if="isNew">新增產品</span>
+                        <span v-else>編輯產品</span>
+                        {{ selectitem.title }}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="imageUrl" class="form-label">主要圖片</label>
+                            <input v-model="selectitem.imageUrl" type="text" class="form-control mb-2" placeholder="請輸入圖片連結">
+                            <img v-if="isNew" class="img-fluid" :src="selectitem.imageUrl">
+                            <img v-else v-bind:src="selectitem.imageUrl" class="img-fluid" v-bind:alt="selectitem.title"
+                                v-bind:title="`${selectitem.title} : ${ selectitem.description}`" />
+                            <label class="form-label">多圖新增</label>
+                            <div v-if="Array.isArray(selectitem.imagesUrl)">
+                                <div class="mb-1" v-for="(image, key) in selectitem.imagesUrl" :key="key">
+                                    <div class="mb-3">
+                                      <label for="imageUrl" class="form-label">圖片網址</label>
+                                      <input v-model="selectitem.imagesUrl[key]" type="text" class="form-control"
+                                        placeholder="請輸入圖片連結">
+                                    </div>
+                                    <img class="img-fluid" :src="image">
+                                </div>
+                                <div v-if="!selectitem.imagesUrl.length || selectitem.imagesUrl[selectitem.imagesUrl.length - 1]">
+                                    <button type="button" class="btn btn btn-outline-success col-md-12 ms-auto" @click="selectitem.imagesUrl.push('')">
+                                        新增圖片
+                                    </button>
+                                </div>
+                                <div v-else>
+                                    <button type="button" class="btn btn btn-outline-danger col-md-12 ms-auto" @click="selectitem.imagesUrl.pop()">
+                                        刪除圖片
+                                    </button>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <button type="button" class="btn btn btn-outline-success col-md-12 ms-auto" @click="insertImages">
+                                    新增圖片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <label for="selectTitle" class="">標題</label>
+                                <div class="col-md-12">
+                                    <input id="selectTitle" type="text" class="form-control" placeholder="請輸入標題" v-model="selectitem.title" />
+                                </div>
+                                <label for="selectCategory" class="col-md-6 ms-auto">分類</label>
+                                <label for="selectUnit" class="col-md-6 ms-auto">單位</label>
+                                <div class="col-md-6">
+                                    <input id="selectCategory" type="text" class="form-control" placeholder="請輸入分類" v-model="selectitem.category" />
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="selectUnit" type="text" class="form-control" placeholder="請輸入單位" v-model="selectitem.unit" />
+                                </div>
+                                <label for="selectOriginprice" class="col-md-6 ms-auto">原價</label>
+                                <label for="selectPrice" class="col-md-6 ms-auto">售價</label>
+                                <div class="col-md-6">
+                                    <input id="selectOriginprice" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model="selectitem.origin_price" />
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="selectPrice" type="number" min="0" class="form-control" placeholder="請輸入售價" v-model="selectitem.price" />
+                                </div>
+                                <label for="selectDescription" class="col-md-12">商品描述</label>
+                                <div class="col-md-12">
+                                    <textarea id="selectDescription" class="form-control" placeholder="請輸入商品描述" v-model="selectitem.description"></textarea>
+                                </div>
+                                <label for="selectContent" class="col-md-12">說明內容</label>
+                                <div class="col-md-12">
+                                    <textarea id="selectContent" class="form-control" placeholder="請輸入說明內容" v-model="selectitem.content"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <input id="selectEnabled" type="checkbox"  :value="selectitem.is_enabled" :checked="selectitem.is_enabled" v-model="selectitem.is_enabled" />
+                                    <label for="selectEnabled">是否啟用</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="updateProduct">確認</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 開啟deleteModal -->
+    <script type="text/x-template" id="deleteModal">
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteModalLabel">刪除商品</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        確認要刪除 <strong class="text-danger">{{ selectitem.title }}</strong> 商品嗎?(刪除後將無法恢復)。
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" @click="deleteProduct()">確認刪除</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
     
     
 
